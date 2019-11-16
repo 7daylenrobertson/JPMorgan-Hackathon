@@ -29,14 +29,14 @@ while counter<=30:
 
 
 #This can be used to send out to family members when 911 is texted
-#numbers_to_message = ['+15558675310', '+14158141829', '+15017122661']
-#for number in numbers_to_message:
+#numbers = ['+number', '+number', '+number']
+#for number in numbers:
     #client.messages.create(
         #body = 'Hello from my Twilio number!',
         #from_ = '+15017122662',
         #to = 'number'
     #)
-
+#For making calls if user isnt inside states that allow texts  Colorado, Georgia, Illinois, Indiana, Iowa, Maine, Maryland, Montana, New York, North Carolina, Ohio, Pennsylvania, South Carolina, Texas, Vermont, and Virginia
 #call = client.calls.create(
  #url='http://demo.twilio.com/docs/voice.xml',
  #to='+14155551212',
