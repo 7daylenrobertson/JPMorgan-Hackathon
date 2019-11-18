@@ -1,7 +1,6 @@
 from twilio.rest import Client
 import geocoder
 import cv2
-# test test
 
 userName = ""
 phoneNumber = 0
