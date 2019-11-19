@@ -113,7 +113,7 @@ for i in range(0, len(numberFile)): # adds numbers to list
 	else:
 		j += 1
 
-for i in range(0, len(lstNum)): # test emergncy contact
+for i in range(0, len(lstNum)): # text emergncy contact
 	sos = client.messages.create(
 		media_url = ["https://pbs.twimg.com/media/A7nSGtLCUAAq6iz.jpg"],
 		from_ = phoneNumber,
