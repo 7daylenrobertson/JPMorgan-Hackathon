@@ -55,7 +55,7 @@ def firstTimeUse(): # when app is opened for the first time
 	userName = open("userName.txt", "r").read()
 
 	if len(userName) == 0:
-		print("A name is required\n")
+		print("A name is required")
 		firstTimeUse()
 	else:
 		print("Hello " + userName)
