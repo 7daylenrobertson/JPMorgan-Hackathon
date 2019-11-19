@@ -27,7 +27,7 @@ def userNumber(): # return the users number
 	else:
 		return phoneNumber
 
-def otherNumbers():
+def otherNumbers(): # stores all emergancy numbers
 	numbers = 0
 	numberFile = open("textToNumbers.txt", "w")
 	numberFile.write("912 ") # make 911 when ready
@@ -68,7 +68,7 @@ def firstTimeUse(): # when app is opened for the first time
 
 	phoneNumber = userNumber()
 	numberFile = open("phoneNumber.txt", "w")
-	numberFile.write(str(phoneNumber))
+	numberFile.write(str(phoneNumber)) # store user number
 	numberFile.close()
 
 	question = input("Do you have any other numbers you would like to input? Y/N ")
@@ -77,12 +77,13 @@ def firstTimeUse(): # when app is opened for the first time
 	else:
 		numberFile = open("textToNumbers.txt", "w")
 		numberFile.write("912 ") # make 911 when ready
+		numberFile.close()
 
-	uses = open("uses.txt", "w")
+	uses = open("uses.txt", "w") # app knows that it has been set up
 	uses.write("1")
 	uses.close()
 
-try:
+try: # determin if app has been set up
 	uses = open("uses.txt", "r").read()
 	if uses == "0":
 		firstTimeUse()
@@ -99,20 +100,20 @@ phoneNumber = open("phoneNumber.txt", "r").read()
 numberFile = open("textToNumbers.txt", "r").read()
 cnt = 0
 
-for i in range(0, len(numberFile)):
+for i in range(0, len(numberFile)): # count how many phone numbers
 	if numberFile[i] == " ":
 		cnt += 1
 
 lstNum = [""]*cnt
 j = 0
 
-for i in range(0, len(numberFile)):
+for i in range(0, len(numberFile)): # adds numbers to list
 	if numberFile[i] != " ":
 		lstNum[j] += numberFile[i]
 	else:
 		j += 1
 
-for i in range(0, len(lstNum)):
+for i in range(0, len(lstNum)): # test emergncy contact
 	sos = client.messages.create(
 		media_url = ["https://pbs.twimg.com/media/A7nSGtLCUAAq6iz.jpg"],
 		from_ = phoneNumber,
