@@ -111,7 +111,6 @@ for i in range(0, len(numberFile)):
 		lstNum[j] += numberFile[i]
 	else:
 		j += 1
-print(lstNum)
 
 for i in range(0, len(lstNum)):
 	sos = client.messages.create(
