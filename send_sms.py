@@ -4,10 +4,8 @@ import cv2
 
 userName = ""
 phoneNumber = 0
-uses = open("uses.txt", "w")
-uses.write("0")
-uses.close()
 counter = 0
+
 # find a way to save this information
 account_sid = "AC34a5d68ec0d37b601dce607161387a0a" # sign up with a twilio account in order to use the api, trial account
 auth_token  = "39a9dcc01ff402661d311b3981ca2852"
@@ -21,15 +19,33 @@ def userNumber(): # return the users number
 	try:
 		phoneNumber = int(input("What is your number? "))
 	except:
-		print("Please only enter numbers\n")
+		print("Please only enter numbers")
 		userNumber()
 	if len(str(phoneNumber)) != 10:
-		print("Your number must be 10 digits\n")
+		print("Your number must be 10 digits")
 		userNumber()
 	else:
-		numberFile = open("phoneNumber.txt", "w")
-		numberFile.write(str(phoneNumber))
-		numberFile.close()
+		return phoneNumber
+
+def otherNumbers():
+	numbers = 0
+	numberFile = open("textToNumbers.txt", "w")
+	try:
+		num = int(input("Enter how many numbers you want to text incase of emergcy: "))
+	except:
+		print("Enter only numbers")
+		otherNumbers()
+	for i in range(0, num):
+		try:
+			numbers = int(input("Enter number: "))
+		except:
+			print("Please only enter numbers")
+		if len(str(numbers)) != 10:
+			print("Your number must be 10 digits")
+			i -= 1
+		else:
+			numberFile.write(str(numbers))
+	numberFile.close()
 
 def firstTimeUse(): # when app is opened for the first time
 	name = input("What is your full legal name? ")
@@ -43,18 +59,29 @@ def firstTimeUse(): # when app is opened for the first time
 		firstTimeUse()
 	else:
 		print("Hello " + userName)
-	userNumber()
 
-checkUses = open("uses.txt", "r").read()
-if checkUses == "0": # if this is the first time the app has been opened
-	checkUses = open("uses.txt", "w")
-	checkUses.write("1")
-	checkUses.close()
+	phoneNumber = userNumber()
+	numberFile = open("phoneNumber.txt", "w")
+	numberFile.write(str(phoneNumber))
+	numberFile.close()
+
+	question = input("Do you have any other numbers you would like to input? Y/N ")
+	if question.upper() == "Y":
+		otherNumbers()
+	return True
+
+try:
+	uses = open("uses.txt", "r").read()
+	if uses == "0":
+		if firstTimeUse():
+			uses = open("uses.txt", "w")
+			uses.write("1")
+			uses.close()
+except:
+	uses = open("uses.txt", "w")
+	uses.write("0")
+	uses.close()
 	firstTimeUse()
-	phoneNumber = open("phoneNumber.txt", "r").read()
-else:
-	phoneNumber = open("phoneNumber.txt", "r").read()
-	userName = open("userName.txt", "r").read()
 
 # Uses identification and token defined in 6-7 as parameters for the client
 client = Client(account_sid, auth_token)
