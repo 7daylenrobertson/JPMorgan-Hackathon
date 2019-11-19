@@ -68,7 +68,9 @@ def firstTimeUse(): # when app is opened for the first time
 	question = input("Do you have any other numbers you would like to input? Y/N ")
 	if question.upper() == "Y":
 		otherNumbers()
-	return True
+	uses = open("uses.txt", "w")
+	uses.write("1")
+	uses.close()
 
 try:
 	uses = open("uses.txt", "r").read()
