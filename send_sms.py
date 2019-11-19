@@ -30,6 +30,7 @@ def userNumber(): # return the users number
 def otherNumbers():
 	numbers = 0
 	numberFile = open("textToNumbers.txt", "w")
+	numberFile.write("912 ") # make 911 when ready
 	try:
 		num = int(input("Enter how many numbers you want to text incase of emergcy: "))
 	except:
@@ -40,11 +41,16 @@ def otherNumbers():
 			numbers = int(input("Enter number: "))
 		except:
 			print("Please only enter numbers")
+			numbers = 1
 		if len(str(numbers)) != 10:
 			print("Your number must be 10 digits")
 			i -= 1
+		elif i != 0:
+			numberFile.write(str(numbers) + " ")
 		else:
-			numberFile.write(str(numbers))
+			numberFile.write(str(numbers) + " ")
+			numberFile.close()
+			numberFile = open("textToNumbers.txt", "a")
 	numberFile.close()
 
 def firstTimeUse(): # when app is opened for the first time
@@ -68,6 +74,9 @@ def firstTimeUse(): # when app is opened for the first time
 	question = input("Do you have any other numbers you would like to input? Y/N ")
 	if question.upper() == "Y":
 		otherNumbers()
+	else:
+		numberFile = open("textToNumbers.txt", "w")
+		numberFile.write("912 ") # make 911 when ready
 
 	uses = open("uses.txt", "w")
 	uses.write("1")
@@ -86,14 +95,34 @@ except:
 # Uses identification and token defined in 6-7 as parameters for the client
 client = Client(account_sid, auth_token)
 
-sos = client.messages.create(
-	media_url = ["https://pbs.twimg.com/media/A7nSGtLCUAAq6iz.jpg"], 
-	from_ = phoneNumber,
-	to = "+14432533766", # change to 911 when ready
-	body = ("I AM BEING HELD AGAINST MY WILL." + " MY NAME IS " + userName.upper()
-	+ (". MY LATITUDE IS: " + str(g.lat)) + (". MY LONGITUDE: " + str(g.lng))
-	+ (". MY CITY AND STATE IS: " + str(g)))
-)
+phoneNumber = open("phoneNumber.txt", "r").read()
+numberFile = open("textToNumbers.txt", "r").read()
+cnt = 0
+
+for i in range(0, len(numberFile)):
+	if numberFile[i] == " ":
+		cnt += 1
+
+lstNum = [""]*cnt
+j = 0
+
+for i in range(0, len(numberFile)):
+	if numberFile[i] != " ":
+		lstNum[j] += numberFile[i]
+	else:
+		j += 1
+print(lstNum)
+
+for i in range(0, len(lstNum)):
+	sos = client.messages.create(
+		media_url = ["https://pbs.twimg.com/media/A7nSGtLCUAAq6iz.jpg"],
+		from_ = phoneNumber,
+		to = lstNum[i],
+		body = ("I AM BEING HELD AGAINST MY WILL." + " MY NAME IS " + userName.upper()
+		+ (". MY LATITUDE IS: " + str(g.lat)) + (". MY LONGITUDE: " + str(g.lng))
+		+ (". MY CITY AND STATE IS: " + str(g)))
+	)
+
 
 print(sos.sid)
 while counter <= 5001:
@@ -140,6 +169,5 @@ call = client.calls.create(
 	to="+14155551212",
 	from_="+15017122661"
 )
-
 print(call.sid)
 """
