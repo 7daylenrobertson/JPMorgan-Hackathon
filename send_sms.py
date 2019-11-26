@@ -30,29 +30,36 @@ def userNumber(): # return the users number
 
 def otherNumbers(): # stores all emergancy numbers
 	numbers = 0
+	num = 0
 	numberFile = open("textToNumbers.txt", "w")
 	numberFile.write("912 ") # make 911 when ready
+	numberFile.close()
+	numberFile = open("textToNumbers.txt", "a")
+
 	try:
 		num = int(input("Enter how many numbers you want to text incase of emergcy: "))
 	except:
 		print("Enter only numbers")
 		otherNumbers()
+
 	for i in range(0, num):
+		print(i)
 		try:
 			numbers = int(input("Enter number: "))
 		except:
-			print("Please only enter numbers")
-			numbers = 1
-		if len(str(numbers)) != 10:
-			print("Your number must be 10 digits")
 			i -= 1
-		elif i != 0:
-			numberFile.write(str(numbers) + " ")
+			print("Please only enter numbers")
+			pass
+		if len(str(numbers)) != 10:
+			print(i)
+			print("Your number must be 10 digits")
 		else:
+			print(i)
 			numberFile.write(str(numbers) + " ")
-			numberFile.close()
-			numberFile = open("textToNumbers.txt", "a")
 	numberFile.close()
+	help = input("Do you need help right now? Y/N ")
+	if help.upper() == "Y":
+		call4Help(g)
 
 def firstTimeUse(): # when app is opened for the first time
 	name = input("What is your full legal name? ")
@@ -84,59 +91,63 @@ def firstTimeUse(): # when app is opened for the first time
 	uses.write("1")
 	uses.close()
 
+def call4Help(g):
+	# Uses identification and token defined in 6-7 as parameters for the client
+	client = Client(account_sid, auth_token)
+	phoneNumber = open("phoneNumber.txt", "r").read()
+	numberFile = open("textToNumbers.txt", "r").read()
+	cnt = 0
+
+	for i in range(0, len(numberFile)): # count how many phone numbers
+		if numberFile[i] == " ":
+			cnt += 1
+
+	lstNum = [""]*cnt
+	j = 0
+
+	for i in range(0, len(numberFile)): # adds numbers to list
+		if numberFile[i] != " ":
+			lstNum[j] += numberFile[i]
+		else:
+			j += 1
+
+	for i in range(0, len(lstNum)): # text all emergncy contact
+		sos = client.messages.create(
+			media_url = ["https://pbs.twimg.com/media/A7nSGtLCUAAq6iz.jpg"],
+			from_ = phoneNumber,
+			to = lstNum[i],
+			body = ("I AM BEING HELD AGAINST MY WILL." + " MY NAME IS " + userName.upper()
+			+ (". MY LATITUDE IS: " + str(g.lat)) + (". MY LONGITUDE: " + str(g.lng))
+			+ (". MY CITY AND STATE IS: " + str(g)))
+		)
+		print(sos.sid)
+
+	while counter <= 5001:
+		counter += 1
+		if counter > 5000:
+			g = geocoder.ip("me")
+			print(sos.sid)
+
 if os.path.exists("uses.txt"): # determin if app has been set up
 	uses = open("uses.txt", "r").read()
 	if uses == "0":
 		firstTimeUse()
+	else:
+		help = input("Do you need help? Y/N ")
+		if help.upper() == "Y":
+			call4Help(g)
+		else:
+			print("Okay, stay safe!")
 else:
 	uses = open("uses.txt", "w")
 	uses.write("0")
 	uses.close()
 	firstTimeUse()
 
-# Uses identification and token defined in 6-7 as parameters for the client
-client = Client(account_sid, auth_token)
-
-phoneNumber = open("phoneNumber.txt", "r").read()
-numberFile = open("textToNumbers.txt", "r").read()
-cnt = 0
-
-for i in range(0, len(numberFile)): # count how many phone numbers
-	if numberFile[i] == " ":
-		cnt += 1
-
-lstNum = [""]*cnt
-j = 0
-
-for i in range(0, len(numberFile)): # adds numbers to list
-	if numberFile[i] != " ":
-		lstNum[j] += numberFile[i]
-	else:
-		j += 1
-
-for i in range(0, len(lstNum)): # text emergncy contact
-	sos = client.messages.create(
-		media_url = ["https://pbs.twimg.com/media/A7nSGtLCUAAq6iz.jpg"],
-		from_ = phoneNumber,
-		to = lstNum[i],
-		body = ("I AM BEING HELD AGAINST MY WILL." + " MY NAME IS " + userName.upper()
-		+ (". MY LATITUDE IS: " + str(g.lat)) + (". MY LONGITUDE: " + str(g.lng))
-		+ (". MY CITY AND STATE IS: " + str(g)))
-	)
-
-
-print(sos.sid)
-while counter <= 5001:
-	counter += 1
-	if counter > 5000:
-		g = geocoder.ip("me")
-		print(sos.sid)
-
 """
 Code to control camera (in order to send out pictures of surroundings every 5 minutes.
 Has not been applied to main code)
 Must install (pip install numpy) (pip install opencv-python) for cv2 to work
-"""
 cv2.namedWindow("preview")
 vc = cv2.VideoCapture(0)
 
@@ -153,8 +164,9 @@ while rval:
         break
 
 cv2.destroyWindow("preview")
-"""
+
 This can be used to send out to family members when 911 is texted
+Already handled in call4Help function
 numbers = ["+number", "+number", "+number"]
 for number in numbers:
     client.messages.create(
