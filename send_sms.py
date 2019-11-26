@@ -1,6 +1,7 @@
 from twilio.rest import Client
 import geocoder
 import cv2
+import os
 
 userName = ""
 phoneNumber = 0
@@ -83,11 +84,11 @@ def firstTimeUse(): # when app is opened for the first time
 	uses.write("1")
 	uses.close()
 
-try: # determin if app has been set up
+if os.path.exists("uses.txt"): # determin if app has been set up
 	uses = open("uses.txt", "r").read()
 	if uses == "0":
 		firstTimeUse()
-except:
+else:
 	uses = open("uses.txt", "w")
 	uses.write("0")
 	uses.close()
