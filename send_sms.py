@@ -44,22 +44,23 @@ def otherNumbers(): # stores all emergancy numbers
 
 	for i in range(0, num):
 		print(i)
-		try:
+		try: # fix if a use enters str instead of int
 			numbers = int(input("Enter number: "))
 		except:
 			i -= 1
 			print("Please only enter numbers")
-			pass
-		if len(str(numbers)) != 10:
-			print(i)
+			continue
+		if len(str(numbers)) != 10: 
 			print("Your number must be 10 digits")
 		else:
-			print(i)
 			numberFile.write(str(numbers) + " ")
 	numberFile.close()
+
 	help = input("Do you need help right now? Y/N ")
 	if help.upper() == "Y":
 		call4Help(g)
+	else:
+		print("Okay, stay safe!")
 
 def firstTimeUse(): # when app is opened for the first time
 	name = input("What is your full legal name? ")
