@@ -1,7 +1,7 @@
+import os
 from twilio.rest import Client
 import geocoder
 import cv2
-import os
 
 userName = ""
 phoneNumber = 0
