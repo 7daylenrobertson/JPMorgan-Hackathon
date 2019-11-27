@@ -28,13 +28,27 @@ def userNumber(): # return the users number
 	else:
 		return phoneNumber
 
-def otherNumbers(): # stores all emergancy numbers
+def addNums2Dir():
+	numberFile = open("textToNumbers.txt", "a")
 	numbers = 0
+
+	try:
+		numbers = int(input("Enter number: "))
+	except:
+		print("Please only enter numbers")
+		addNums2Dir()
+	if len(str(numbers)) != 10:
+		print("Your number must be 10 digits")
+		addNums2Dir()
+	else:
+		numberFile.write(str(numbers) + " ")
+	numberFile.close()
+
+def otherNumbers(): # stores all emergancy numbers
 	num = 0
 	numberFile = open("textToNumbers.txt", "w")
 	numberFile.write("912 ") # make 911 when ready
 	numberFile.close()
-	numberFile = open("textToNumbers.txt", "a")
 
 	try:
 		num = int(input("Enter how many numbers you want to text incase of emergcy: "))
@@ -43,18 +57,7 @@ def otherNumbers(): # stores all emergancy numbers
 		otherNumbers()
 
 	for i in range(0, num):
-		print(i)
-		try: # fix if a use enters str instead of int
-			numbers = int(input("Enter number: "))
-		except:
-			i -= 1
-			print("Please only enter numbers")
-			continue
-		if len(str(numbers)) != 10: 
-			print("Your number must be 10 digits")
-		else:
-			numberFile.write(str(numbers) + " ")
-	numberFile.close()
+		addNums2Dir()
 
 	help = input("Do you need help right now? Y/N ")
 	if help.upper() == "Y":
